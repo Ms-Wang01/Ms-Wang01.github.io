@@ -1,7 +1,7 @@
 DANNet: A One-Stage Domain Adaptation Network for Unsupervised Nighttime Semantic Segmentation
 ========
 # 主要贡献
-1. **DANNNet**是第一个用于夜间语义分割的单阶段适应(one-stage adaptation)框架。这个域适应的过程是通过**GAN**实现的，设计一个共享权重的RelightNet和Semantic Segmentation Network充当GAN中的Generator，然后有两个Discriminators分别识别来自源域 **S**(数据来自ImageNet)还是目标域 **D<sub>d</sub>**(Dark Zurich-D (日间拍摄))和识别来自源域 **S**(数据来自ImageNet)还是目标域 **D<sub>n</sub>**(Dark Zurich-N (夜间拍摄))的。
+1. **DANNNet**是第一个用于夜间语义分割的单阶段适应(one-stage adaptation)框架。这个域适应的过程是通过**GAN**实现的，设计一个共享权重的RelightNet和Semantic Segmentation Network充当GAN中的Generator，然后有两个Discriminators分别识别来自源域(数据来自ImageNet)还是目标域(Dark Zurich-D (日间拍摄))和识别来自源域(数据来自ImageNet)还是目标域 (Dark Zurich-N (夜间拍摄))的。
 2. 用daytime图像分割的结果作为对应nighttime的label来作伪监督学习，因为拍摄时间不同，只能保证静态物体(比如天空，楼房，街道等)的位置信息相同，所以此处计算Loss的时候只考虑静态对象的分类。
 3. Ablation study证明了DANNet的每一个部件都是有效的。
 
@@ -11,6 +11,7 @@ DANNet 同时进行从 **S** 到 **D<sub>d</sub>** 和从 **S** 到 **D<sub>n</s
 
 ### RelightNet图像重光照网络
 ![image](https://user-images.githubusercontent.com/70552149/166411882-fcc87202-8214-4c78-a6c4-a28ba97daecf.png)
+它由四个卷积层、三个残差块和两个转置卷积层组成，每个卷积层后面除了最后一个卷积层之外，还有一个批量归一化层。然后将最后一层的输出添加到输入图像中，以获得重新照明的图像。
 该网络的输入为三种不同的数据域：![image](https://user-images.githubusercontent.com/70552149/166438580-a3d7d34d-941f-43df-b3aa-2916127cdef3.png) 生成后的图像表示为：![image](https://user-images.githubusercontent.com/70552149/166438614-73f4504c-7030-40b3-bbad-72a2c1a4da24.png) 。所有的输入图像共享相同的权重值
 1. RelightNet的作用是让来源不同的三类输入在进入分割网络前的强度分布相互靠近, 也就是 **R<sub>s</sub>**、**R<sub>td</sub>** 和 **R<sub>tn</sub>** 在强度分布上要相似, 从而使后续的语义分割网络对光照变化的敏感性降低。这个网络一共有三个Loss组成了**L<sub>light</sub>**  <br> **L<sub>light</sub>** = **α<sub>tv</sub>** **L<sub>tv</sub>** + **α<sub>exp</sub>** **L<sub>exp</sub>** + **α<sub>ssim</sub>** **L<sub>ssim</sub>**
 2. 其中 **L<sub>tv</sub>** 是一种广泛应用于图像去噪和图像合成的损失函数，目的是让生成的图像噪点更小，看起来更加平滑，有利于之后的分割网络。
