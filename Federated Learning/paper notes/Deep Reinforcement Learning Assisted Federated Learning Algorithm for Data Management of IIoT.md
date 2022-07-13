@@ -1,5 +1,6 @@
 # Deep Reinforcement Learning Assisted Federated Learning Algorithm for Data Management of IIoT
 
+## IEEE Transactions on Industrial Informatics 中科院一区
 ## 深度强化学习辅助的联邦学习
 ## 背景
 1. 工业物联网（IIoT）规模扩大，需要对大量用户数据进行管理。并且隐私数据通常容易受到异构网络、异构设备或恶意软件的攻击。
